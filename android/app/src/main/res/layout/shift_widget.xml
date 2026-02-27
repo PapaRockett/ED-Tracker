@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/widget_bg"
+    android:orientation="vertical"
+    android:padding="12dp">
+
+    <TextView
+        android:id="@+id/widget_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Week start times"
+        android:textColor="#0f172a"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/day1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textColor="#1e293b"
+        android:textSize="14sp" />
+
+    <TextView android:id="@+id/day2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="#1e293b" android:textSize="14sp" />
+    <TextView android:id="@+id/day3" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="#1e293b" android:textSize="14sp" />
+    <TextView android:id="@+id/day4" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="#1e293b" android:textSize="14sp" />
+    <TextView android:id="@+id/day5" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="#1e293b" android:textSize="14sp" />
+</LinearLayout>
