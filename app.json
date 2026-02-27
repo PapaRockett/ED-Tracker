@@ -1,0 +1,13 @@
+{
+  "expo": {
+    "name": "ED Tracker",
+    "slug": "ed-tracker",
+    "version": "1.0.0",
+    "sdkVersion": "54.0.0",
+    "orientation": "portrait",
+    "platforms": ["android"],
+    "android": {
+      "package": "com.example.edtracker"
+    }
+  }
+}
