@@ -6,20 +6,40 @@ This project is a mobile app for Android using **Expo SDK 54**.
 
 - Tracks shift **start times Monday-Friday only**.
 - Uses a **5-week repeating cycle**.
-- Lets you enter start times for each weekday in each cycle week.
+- Uses a dropdown picker for each day with options: **8:00 AM, 9:00 AM, 5:00 PM, 6:30 PM**.
 - Highlights the **current cycle day** in the app.
 - Includes an Android **home screen widget** that shows the active week and marks today's weekday.
 
-## Run
+## Run in VS Code + QR flow
 
 ```bash
 npm install
-npm run android
+npm run start
 ```
 
-## Widget setup
+Then scan the QR code in Expo Go.
 
-1. Long-press Android home screen.
-2. Add widget.
-3. Choose **ED Tracker** widget.
-4. Edit times in the app; widget refreshes automatically.
+## Dependency warning fix (Expo SDK 54)
+
+If Expo prints package-compatibility warnings, sync versions with:
+
+```bash
+npx expo install @react-native-async-storage/async-storage expo-modules-core expo-status-bar react-native @react-native-picker/picker
+```
+
+## Home-screen widget setup (important)
+
+Android widgets require native code, so they are **not available in Expo Go**.
+
+1. Build/install a development build (example: `npx expo run:android` or EAS dev build).
+2. Open the installed app once and set your schedule.
+3. Long-press Android home screen.
+4. Tap **Widgets**.
+5. Choose **ED Tracker**.
+6. Place the widget on the home screen.
+
+## Why the widget may not appear
+
+- If you only run with Expo Go + QR, the widget will not be available.
+- After installing a dev build, open the app once before adding the widget.
+- If needed, remove and re-add the widget after changing schedule data.
