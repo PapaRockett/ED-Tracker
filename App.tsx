@@ -1,5 +1,4 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Picker } from '@react-native-picker/picker';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useMemo, useState } from 'react';
 import {
@@ -8,17 +7,10 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   View
 } from 'react-native';
-import {
-  DAYS,
-  SHIFT_OPTIONS,
-  ShiftOption,
-  ShiftSchedule,
-  buildDefaultSchedule,
-  getCurrentCyclePosition,
-  serializeWidgetPayload
-} from './src/schedule';
+import { DAYS, ShiftSchedule, buildDefaultSchedule, getCurrentCyclePosition, serializeWidgetPayload } from './src/schedule';
 
 const STORAGE_KEY = 'ed-schedule';
 const ShiftWidgetModule = NativeModules.ShiftWidgetModule as undefined | {
@@ -27,11 +19,9 @@ const ShiftWidgetModule = NativeModules.ShiftWidgetModule as undefined | {
 
 const App = () => {
   const [schedule, setSchedule] = useState<ShiftSchedule>(buildDefaultSchedule());
-  const [supportsNativeWidget, setSupportsNativeWidget] = useState(true);
   const current = useMemo(() => getCurrentCyclePosition(), []);
 
   useEffect(() => {
-    setSupportsNativeWidget(Boolean(ShiftWidgetModule));
     AsyncStorage.getItem(STORAGE_KEY).then((saved) => {
       if (!saved) return;
       setSchedule(JSON.parse(saved));
@@ -43,7 +33,7 @@ const App = () => {
     ShiftWidgetModule?.updateWidget(serializeWidgetPayload(schedule));
   }, [schedule]);
 
-  const updateTime = (week: number, day: (typeof DAYS)[number], value: ShiftOption) => {
+  const updateTime = (week: number, day: (typeof DAYS)[number], value: string) => {
     setSchedule((previous) => ({
       ...previous,
       [week]: {
@@ -59,26 +49,9 @@ const App = () => {
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.title}>5-Week Start Time Tracker</Text>
         <Text style={styles.subtitle}>Monday to Friday only. Weekends are hidden.</Text>
-
         <View style={styles.currentCard}>
           <Text style={styles.currentWeek}>Current cycle week: {current.week}</Text>
-          <Text style={styles.currentDay}>
-            Today: {current.day}
-            {current.isWeekend ? ' (weekend mapped to Friday)' : ''}
-          </Text>
-        </View>
-
-        <View style={styles.helpCard}>
-          <Text style={styles.helpTitle}>Widget help</Text>
-          <Text style={styles.helpText}>
-            To use the home-screen widget, create a development build (not Expo Go), then long-press
-            your Android home screen and add "ED Tracker".
-          </Text>
-          {!supportsNativeWidget && (
-            <Text style={styles.warningText}>
-              You are likely running in Expo Go via QR. The widget updates are unavailable there.
-            </Text>
-          )}
+          <Text style={styles.currentDay}>Today: {current.day}{current.isWeekend ? ' (weekend shown as Friday)' : ''}</Text>
         </View>
 
         {[1, 2, 3, 4, 5].map((week) => (
@@ -93,18 +66,13 @@ const App = () => {
                 ]}
               >
                 <Text style={styles.dayLabel}>{day}</Text>
-                <View style={styles.pickerWrap}>
-                  <Picker
-                    selectedValue={schedule[week][day]}
-                    onValueChange={(value) => updateTime(week, day, value as ShiftOption)}
-                    mode="dropdown"
-                    style={styles.picker}
-                  >
-                    {SHIFT_OPTIONS.map((option) => (
-                      <Picker.Item key={option} label={option} value={option} />
-                    ))}
-                  </Picker>
-                </View>
+                <TextInput
+                  style={styles.input}
+                  value={schedule[week][day]}
+                  placeholder="HH:MM"
+                  keyboardType="numbers-and-punctuation"
+                  onChangeText={(value) => updateTime(week, day, value)}
+                />
               </View>
             ))}
           </View>
@@ -128,17 +96,6 @@ const styles = StyleSheet.create({
   },
   currentWeek: { fontWeight: '700' },
   currentDay: { marginTop: 4 },
-  helpCard: {
-    backgroundColor: '#ecfeff',
-    borderColor: '#67e8f9',
-    borderWidth: 1,
-    borderRadius: 12,
-    padding: 12,
-    gap: 6
-  },
-  helpTitle: { fontSize: 16, fontWeight: '700', color: '#155e75' },
-  helpText: { color: '#0f172a' },
-  warningText: { color: '#b45309', fontWeight: '600' },
   weekCard: {
     backgroundColor: '#ffffff',
     borderRadius: 12,
@@ -162,17 +119,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#eff6ff'
   },
   dayLabel: { fontWeight: '600', width: 90 },
-  pickerWrap: {
+  input: {
     flex: 1,
     borderWidth: 1,
     borderColor: '#cbd5e1',
-    borderRadius: 8,
     backgroundColor: 'white',
-    overflow: 'hidden'
-  },
-  picker: {
-    width: '100%',
-    height: 44
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    textAlign: 'right'
   }
 });
 
