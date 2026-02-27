@@ -1,20 +1,17 @@
 export const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"] as const;
 export type Weekday = (typeof DAYS)[number];
 
-export const SHIFT_OPTIONS = ["8:00 AM", "9:00 AM", "5:00 PM", "6:30 PM"] as const;
-export type ShiftOption = (typeof SHIFT_OPTIONS)[number];
-
-export type ShiftSchedule = Record<number, Record<Weekday, ShiftOption>>;
+export type ShiftSchedule = Record<number, Record<Weekday, string>>;
 
 export const buildDefaultSchedule = (): ShiftSchedule => {
   const schedule = {} as ShiftSchedule;
   for (let week = 1; week <= 5; week += 1) {
     schedule[week] = {
-      Monday: "8:00 AM",
-      Tuesday: "8:00 AM",
-      Wednesday: "8:00 AM",
-      Thursday: "8:00 AM",
-      Friday: "8:00 AM"
+      Monday: "08:00",
+      Tuesday: "08:00",
+      Thursday: "08:00",
+      Wednesday: "08:00",
+      Friday: "08:00"
     };
   }
   return schedule;
@@ -36,10 +33,10 @@ export const getCurrentCyclePosition = (now = new Date()) => {
 
   const diffMs = effectiveDate.getTime() - CYCLE_REFERENCE_MONDAY.getTime();
   const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-  const weekdayIndex = (effectiveDate.getDay() + 6) % 7;
+  const weekdayIndex = ((effectiveDate.getDay() + 6) % 7);
   const workingDayIndex = Math.min(weekdayIndex, 4);
   const cycleDay = diffDays - Math.floor(diffDays / 7) * 2;
-  const week = (((Math.floor(cycleDay / 5) % 5) + 5) % 5) + 1;
+  const week = ((((Math.floor(cycleDay / 5) % 5) + 5) % 5) + 1);
 
   return {
     week,
